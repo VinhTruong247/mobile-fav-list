@@ -14,7 +14,7 @@ type ArtTool = {
 };
 
 const FavoritesPage = () => {
-  const { favorites, toggleFavorite } = useFavorites();
+  const { favorites, toggleFavorite, clearFavorites } = useFavorites();
   const router = useRouter();
 
   const renderFavoriteItem = ({ item }: { item: ArtTool }) => (
@@ -39,6 +39,13 @@ const FavoritesPage = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Favorites</Text>
+        <TouchableOpacity style={styles.clearButton} onPress={clearFavorites}>
+          <Text style={styles.clearButtonText}>Clear All</Text>
+        </TouchableOpacity>
+      </View>
+
       {favorites.length === 0 ? (
         <Text style={styles.emptyMessage}>Let's start browsing</Text>
       ) : (
@@ -59,29 +66,46 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 50,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  clearButton: {
+    backgroundColor: '#ff6b6b',
+    borderRadius: 8,
+    padding: 10,
+  },
+  clearButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
   favoriteItemContainer: {
     flexDirection: 'row',
     marginBottom: 16,
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
-    borderRadius: 10,
-    padding: 12,
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   artImage: {
     width: 100,
     height: 100,
+    borderRadius: 8,
     marginRight: 16,
   },
   artDetails: {
     flex: 1,
+    justifyContent: 'center',
   },
   artName: {
     fontWeight: 'bold',
@@ -94,6 +118,7 @@ const styles = StyleSheet.create({
   dealText: {
     color: 'red',
     fontWeight: 'bold',
+    fontSize: 14,
   },
   listContainer: {
     paddingBottom: 16,

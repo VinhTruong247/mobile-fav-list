@@ -13,6 +13,7 @@ type ArtTool = {
 const FavoritesContext = createContext({
   favorites: [] as ArtTool[],
   toggleFavorite: (tool: ArtTool) => {},
+  clearFavorites: () => {},
   loadFavorites: async () => {},
 });
 
@@ -48,8 +49,17 @@ export const FavoritesProvider = ({ children }: { children: React.ReactNode }) =
     }
   };
 
+  const clearFavorites = async () => {
+    try {
+      setFavorites([]);
+      await AsyncStorage.removeItem('favorites');
+    } catch (error) {
+      console.error('Error clearing favorites:', error);
+    }
+  };
+
   return (
-    <FavoritesContext.Provider value={{ favorites, toggleFavorite, loadFavorites }}>
+    <FavoritesContext.Provider value={{ favorites, toggleFavorite, loadFavorites, clearFavorites }}>
       {children}
     </FavoritesContext.Provider>
   );
