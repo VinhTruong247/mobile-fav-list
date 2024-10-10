@@ -1,14 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export type ArtTool = {
-    id: string;
-    artName: string;
-    price: number;
-    image: string;
-    brand: string;
-    limitedTimeDeal?: number;
-  };
+type ArtTool = {
+  id: string;
+  artName: string;
+  price: number;
+  image: string;
+  brand: string;
+  limitedTimeDeal?: number;
+};
 
 const FavoritesContext = createContext({
   favorites: [] as ArtTool[],
@@ -24,24 +24,32 @@ export const FavoritesProvider = ({ children }: { children: React.ReactNode }) =
   }, []);
 
   const loadFavorites = async () => {
-    const storedFavorites = await AsyncStorage.getItem('favorites');
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
+    try {
+      const storedFavorites = await AsyncStorage.getItem('favorites');
+      if (storedFavorites) {
+        setFavorites(JSON.parse(storedFavorites));
+      }
+    } catch (error) {
+      console.error('Error loading favorites:', error);
     }
   };
 
   const toggleFavorite = async (tool: ArtTool) => {
-    const isFavorite = favorites.some(fav => fav.id === tool.id);
-    const updatedFavorites = isFavorite
-      ? favorites.filter(fav => fav.id !== tool.id)
-      : [...favorites, tool];
+    try {
+      const isFavorite = favorites.some(fav => fav.id === tool.id);
+      const updatedFavorites = isFavorite
+        ? favorites.filter(fav => fav.id !== tool.id)
+        : [...favorites, tool];
 
-    setFavorites(updatedFavorites);
-    await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      setFavorites(updatedFavorites);
+      await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    }
   };
 
   return (
-    <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>
+    <FavoritesContext.Provider value={{ favorites, toggleFavorite, loadFavorites }}>
       {children}
     </FavoritesContext.Provider>
   );
