@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useRouter } from 'expo-router';
@@ -16,6 +16,12 @@ type ArtTool = {
 const FavoritesPage = () => {
   const { favorites, toggleFavorite, clearFavorites } = useFavorites();
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter favorites based on search query
+  const filteredFavorites = favorites.filter(item =>
+    item.artName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const renderFavoriteItem = ({ item }: { item: ArtTool }) => (
     <TouchableOpacity onPress={() => router.push(`/detail/${item.id}`)}>
@@ -46,11 +52,19 @@ const FavoritesPage = () => {
         </TouchableOpacity>
       </View>
 
-      {favorites.length === 0 ? (
-        <Text style={styles.emptyMessage}>Let's start browsing</Text>
+      {/* Search Bar */}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search your favorites"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
+      {filteredFavorites.length === 0 ? (
+        <Text style={styles.emptyMessage}>No matching items found</Text>
       ) : (
         <FlatList
-          data={favorites}
+          data={filteredFavorites}
           keyExtractor={item => item.id}
           renderItem={renderFavoriteItem}
           contentContainerStyle={styles.listContainer}
@@ -84,6 +98,15 @@ const styles = StyleSheet.create({
   clearButtonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  searchBar: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
   },
   favoriteItemContainer: {
     flexDirection: 'row',

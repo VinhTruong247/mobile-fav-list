@@ -104,16 +104,8 @@ export default function ToolDetailPage() {
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={{ uri: tool.image }} style={styles.image} />
-      <View style={styles.detailsContainer}>
-        <Text style={styles.artName}>{tool.artName}</Text>
-        <Text style={styles.price}>${tool.price}</Text>
-        <Text style={styles.brand}>Brand: {tool.brand}</Text>
-
-        {tool.limitedTimeDeal !== undefined && tool.limitedTimeDeal > 0 && (
-          <Text style={styles.dealText}>{Math.round(tool.limitedTimeDeal * 100)}% OFF</Text>
-        )}
-
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: tool.image }} style={styles.image} />
         <TouchableOpacity
           style={styles.favoriteButton}
           onPress={() => toggleFavorite(tool)}
@@ -124,6 +116,15 @@ export default function ToolDetailPage() {
             color={isFavorite ? 'red' : 'gray'}
           />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.detailsContainer}>
+        <Text style={styles.artName}>{tool.artName}</Text>
+        <Text style={styles.price}>${tool.price}</Text>
+        {tool.limitedTimeDeal !== undefined && tool.limitedTimeDeal > 0 && (
+          <Text style={styles.dealText}>{Math.round(tool.limitedTimeDeal * 100)}% OFF</Text>
+        )}
+        <Text style={styles.brand}>Brand: {tool.brand}</Text>
       </View>
 
       <View style={styles.feedbackContainer}>
@@ -179,65 +180,77 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#f4f4f4',
+  },
+  imageContainer: {
+    position: 'relative',
   },
   image: {
     width: '100%',
     height: 300,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 16,
+    backgroundColor: '#eaeaea',
   },
-  detailsContainer: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 10,
+  favoriteButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 10,
+    borderRadius: 50,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowRadius: 5,
+  },
+  detailsContainer: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 3,
-    marginBottom: 16,
+    marginBottom: 20,
   },
   artName: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 24,
     marginBottom: 8,
+    color: '#333',
   },
   price: {
-    fontSize: 20,
-    color: 'green',
-    marginBottom: 8,
-  },
-  brand: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 8,
+    fontSize: 22,
+    color: '#0a8747',
+    marginBottom: 12,
+    fontWeight: 'bold',
   },
   dealText: {
     fontSize: 18,
-    color: 'red',
+    color: '#ff4d4f',
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 10,
   },
-  favoriteButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+  brand: {
+    fontSize: 16,
+    color: '#777',
+    marginBottom: 20,
   },
   feedbackContainer: {
-    marginTop: 20,
-    padding: 16,
+    padding: 20,
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
     elevation: 3,
   },
   feedbackTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '600',
     marginBottom: 16,
   },
   pickerContainer: {
@@ -247,7 +260,7 @@ const styles = StyleSheet.create({
   },
   pickerLabel: {
     fontSize: 16,
-    marginRight: 8,
+    marginRight: 10,
   },
   picker: {
     flex: 1,
@@ -255,14 +268,24 @@ const styles = StyleSheet.create({
   },
   feedback: {
     marginBottom: 16,
+    backgroundColor: '#f9f9f9',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   comment: {
     fontStyle: 'italic',
     marginBottom: 4,
+    color: '#555',
   },
   author: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     marginBottom: 2,
+    color: '#333',
   },
   date: {
     color: '#999',
@@ -272,7 +295,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#999',
   },
-   ratingContainer: {
+  ratingContainer: {
     flexDirection: 'row',
     marginBottom: 4,
   },

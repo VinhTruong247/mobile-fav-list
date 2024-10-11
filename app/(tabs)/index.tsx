@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   selectedBrandButton: {
-    backgroundColor: '#6200ee',
+    backgroundColor: '#000',
   },
   brandButtonText: {
     fontSize: 16,
