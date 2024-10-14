@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 
 type ArtTool = {
   id: string;
@@ -18,7 +19,12 @@ const FavoritesPage = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter favorites based on search query
+  useFocusEffect(
+    useCallback(() => {
+      setSearchQuery('');
+    }, [])
+  );
+
   const filteredFavorites = favorites.filter(item =>
     item.artName.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -47,17 +53,21 @@ const FavoritesPage = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Favorites</Text>
-        <TouchableOpacity style={styles.clearButton} onPress={clearFavorites}>
+        <TouchableOpacity
+          style={[styles.clearButton, favorites.length === 0 && styles.disabledButton]}
+          onPress={clearFavorites}
+          disabled={favorites.length === 0}
+        >
           <Text style={styles.clearButtonText}>Clear All</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Search Bar */}
       <TextInput
-        style={styles.searchBar}
-        placeholder="Search your favorites"
+        style={[styles.searchBar, favorites.length === 0 && styles.grayedOutSearchBar]}
+        placeholder={favorites.length === 0 ? "There is no item to search" : "Search your favorites"}
         value={searchQuery}
         onChangeText={setSearchQuery}
+        editable={favorites.length > 0}
       />
 
       {filteredFavorites.length === 0 ? (
@@ -99,6 +109,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
   },
+  disabledButton: {
+    backgroundColor: '#d3d3d3',
+  },
   searchBar: {
     backgroundColor: '#fff',
     borderRadius: 8,
@@ -107,6 +120,10 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
+  },
+  grayedOutSearchBar: {
+    backgroundColor: '#f0f0f0',
+    color: '#d3d3d3',
   },
   favoriteItemContainer: {
     flexDirection: 'row',
